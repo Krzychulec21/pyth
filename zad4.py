@@ -1,0 +1,236 @@
+import math
+# Importuję moduł 'math', ponieważ używam funkcji 'math.ceil', która zaokrągla wartość w górę.
+
+def cans_for_painting(area, heavy_dirty=False):
+    # Tworzę funkcję 'cans_for_painting', która oblicza liczbę puszek farby potrzebnych do malowania
+    # określonego obszaru. Parametr 'heavy_dirty' wskazuje, czy obszar jest mocno zabrudzony.
+    if heavy_dirty:
+        cans = area / 5 * 1.5
+        # Jeśli obszar jest mocno zabrudzony, potrzebujemy 50% więcej farby.
+    else:
+        cans = area / 5
+        # W przeciwnym razie, potrzebujemy 1 puszki farby na 5 m^2.
+    return math.ceil(cans)
+    # Używam 'math.ceil' do zaokrąglenia liczby puszek do najbliższej liczby całkowitej w górę,
+    # ponieważ nie możemy kupić ułamka puszki farby.
+
+def get_walls_dimensions():
+    # Tworzę funkcję 'get_walls_dimensions', która pobiera od użytkownika liczbę ścian do pomalowania
+    # oraz ich wymiary.
+    try:
+        number_of_walls = int(input("Proszę, podaj liczbę ścian: "))
+        # Próbuję przekształcić wprowadzoną wartość na liczbę całkowitą. Jeśli to nie jest możliwe,
+        # Python zgłosi błąd ValueError, który jest obsługiwany poniżej.
+    except ValueError:
+        raise Exception("Podano niepoprawną liczbę ścian.")
+        # Jeśli wprowadzona wartość nie jest liczbą, zgłaszam wyjątek z odpowiednim komunikatem.
+    dimensions = []
+    # Inicjalizuję pustą listę 'dimensions', która będzie przechowywać wymiary ścian.
+    for _ in range(number_of_walls):
+        # Ta pętla 'for' będzie wykonywana tyle razy, ile ścian podał użytkownik.
+        # Używam tutaj symbolu '_', który jest konwencją oznaczającą, że wartość ta nie jest używana 
+        # w ciele pętli.
+        width = float(input("Podaj szerokość ściany: "))
+        height = float(input("Podaj wysokość ściany: "))
+        # Pobieram od użytkownika szerokość i wysokość ściany. Przekształcam wprowadzone wartości na 
+        # liczby zmiennoprzecinkowe.
+        dimensions.append((width, height))
+        # Dodaję krotkę (width, height) do listy 'dimensions'.
+    return dimensions
+    # Zwracam listę 'dimensions', która zawiera wymiary wszystkich ścian.
+
+def compute_cans_for_dimensions(walls_dimensions, dirtness):
+    # Tworzę funkcję 'compute_cans_for_dimensions', która oblicza łączną liczbę puszek farby potrzebną 
+    # do pomalowania ścian o określonych wymiarach. Lista 'dirtness' wskazuje, które ściany są mocno 
+    # zabrudzone.
+    clean_walls_dimensions = []
+    dirty_walls_dimensions = []
+    # Inicjalizuję dwie puste listy: 'clean_walls_dimensions' do przechowywania wymiarów czystych ścian 
+    # i 'dirty_walls_dimensions' do przechowywania wymiarów zabrudzonych ścian.
+    for i, dimension in enumerate(walls_dimensions):
+        # Iteruję po liście 'walls_dimensions'. Na każdej iteracji otrzymuję indeks elementu (i) i 
+        # wartość elementu (dimension).
+        if dirtness[i]:
+            dirty_walls_dimensions.append(dimension)
+            # Jeśli ściana jest mocno zabrudzona (co wskazuje wartość 'dirtness[i]'), dodaję jej 
+            # wymiary do listy 'dirty_walls_dimensions'.
+        else:
+            clean_walls_dimensions.append(dimension)
+            # W przeciwnym razie, dodaję jej wymiary do listy 'clean_walls_dimensions'.
+    total_cans = 0
+    # Inicjalizuję zmienną 'total_cans', która będzie przechowywać łączną liczbę puszek farby.
+    for dimension in clean_walls_dimensions:
+        total_cans += cans_for_painting(dimension[0]*dimension[1])
+        # Obliczam liczbę puszek farby potrzebną do pomalowania każdej czystej ściany (rozważam obszar,
+        # czyli iloczyn szerokości i wysokości) i dodaję ją do 'total_cans(rozważając obszar, czyli iloczyn szerokości i wysokości) i dodaję ją do 'total_cans'.
+    for dimension in dirty_walls_dimensions:
+        total_cans += cans_for_painting(dimension[0]*dimension[1], heavy_dirty=True)
+        # Robię to samo dla ścian zabrudzonych, ale przekazuję wartość True do parametru 'heavy_dirty'.
+    return total_cans
+    # Zwracam łączną liczbę puszek farby.
+
+Moduł `use_painting_utils`:
+
+```python
+import painting_utils
+# Importuję moduł 'painting_utils', który zawiera funkcje do obliczania liczby puszek farby potrzebnych do malowania.
+import painting_utils as pu
+# To samo, ale teraz mogę odwoływać się do tego modułu jako 'pu'.
+from painting_utils import cans_for_painting
+# Importuję specyficzną funkcję 'cans_for_painting' z modułu 'painting_utils'. Teraz mogę używać tej funkcji bezpośrednio, bez prefiksu 'painting_utils.'.
+
+if __name__ == "__main__":
+    # Ten blok kodu będzie wykonany tylko jeśli ten skrypt jest uruchamiany bezpośrednio, a nie importowany jako moduł.
+    cans = cans_for_painting(5)
+    # Używam funkcji 'cans_for_painting' do obliczenia liczby puszek farby potrzebnych do pomalowania obszaru o wielkości 5 m^2.
+    print(cans)
+    # Wyświetlam wynik.
+
+Funkcja `count_words_in_file`:
+
+```python
+def count_words_in_file(file):
+    # Tworzę funkcję 'count_words_in_file', która zlicza słowa w podanym pliku.
+    with open(file, 'r') as f:
+        # Otwieram plik w trybie do odczytu ('r'). Operator 'with' zapewnia, że plik zostanie zamknięty po zakończeniu bloku kodu.
+        text = f.read()
+        # Czytam cały plik do zmiennej 'text'.
+    text = text.lower()
+    # Konwertuję cały tekst na małe litery, aby zliczanie słów było niezależne od wielkości liter.
+    for ch in ['.', ',', ';', '?']:
+        text = text.replace(ch, ' ')
+        # Zastępuję wszystkie znaki interpunkcyjne spacjami, aby mogły zostać później usunięte podczas dzielenia tekstu na słowa.
+    words = text.split()
+    # Dzielę tekst na słowa. Domyślnie, funkcja 'split' dzieli tekst na podstawie białych znaków (spacje, tabulacje, nowe linie).
+    word_count = {}
+    # Inicjalizuję pusty słownik 'word_count', który będzie przechowywał każde słowo i jego liczbę wystąpień.
+    for word in words:
+        # Iteruję po liście słów.
+        if word in word_count:
+            word_count[word] += 1
+            # Jeśli słowo już jest w słowniku 'word_count', zwiększam jego liczbę wystąpień o 1.
+        else:
+            word_count[word] = 1
+            # W przeciwnym razie, dodaję to słowo do słownika 'word_count' z liczbą wystąpień równą 1.
+    return word_count
+    # Zwracam słownik 'word_count', który zawiera każde słowo i jego liczbę wystąpień.
+
+Generator `payment_per_minute`:
+
+```python
+def payment_per_minute(minutes, subscription):
+    # Tworzę generator 'payment_per_minute', który generuje płatność za minutę w zależności od liczby minut i rodzaju subskrypcji.
+    if subscription:
+        # Jeśli użytkownik ma subskrypcję...
+        yield 0
+        # ...pierwsza minuta jest darmowa, więc generuję wartość 0.
+        for i in range(1, minutes):
+            # Dla każdej kolejnej minuty...
+            yield i * 0.5
+            # ...generuję płatność równą połowie liczby minut.
+    else:
+        # Jeśli użytkownik nie ma subskrypcji...
+        yield 6
+        # ...pierwsza minuta kosztuje 6 jednostek, więc generuję wartość 6.
+        for i in range(1, minutes):
+            # Dla każdej kolejnej minuty...
+            yield 6 + i * 2
+            # ...generuję płatność równą 6 plus dwa razy liczba minut.
+
+Iterator `SquaredOddNumbers`:
+
+```python
+class SquaredOddNumbers:
+    # Tworzę klasę 'SquaredOddNumbers', która jest iteratorem generującym kwadraty kolejnych nieparzystych liczb naturalnych.
+    def __init__(self):
+        # Metoda inicjalizująca. Tutaj ustawiam początkową wartość 'n' na 1.
+        self.n = 1
+
+    def __iter__(self):
+        # Metoda zwracająca iterator. W tym przypadku jest to ten sam obiekt, więc zwracam 'self'.
+        return self
+
+    def __next__(self):
+        # Metoda zwracająca kolejną wartość iteratora.
+        if self.n > 10:
+            # Jeśli 'n' jest większe niż 10, kończę generowanie wartości (to jest tylko przykładowe ograniczenie).
+            raise StopIteration
+        else:
+            # W przeciwnym razie...
+            result = self.n ** 2
+            # ...obliczam kwadrat wartości 'n'...
+            self.n += 2
+            # ...i zwiększam 'n' o 2 (żeby dostać kolejną liczbę nieparzystą).
+            return result
+            # Zwracam wynik.
+
+Klasy `Drink`, `BottledWater`, `SweetenedDrink`:
+
+```python
+class Drink:
+    # Tworzę klasę 'Drink', która reprezentuje napój.
+    def __init__(self, capacity, container_type):
+        # Metoda inicjalizująca. Przyjmuje pojemność napoju i typ opakowania jako argumenty.
+        self.capacity = capacity
+        # Ustawiam pojemność napoju.
+        self.container_type = container_type
+        # Ustawiam typ opakowania.
+
+    def get_capacity_in_mililiters(self):
+        # Tworzę metodę, która zwraca pojemność napoju w mililitrach.
+        return self.capacity
+        # Zwracam wartość zmiennej 'capacity'.
+
+    def is_save_to_rotate(self):
+        # Tworzę metodę, która sprawdza, czy napój jest bezpieczny do obracania. Załóżmy, że tylko napoje w butelkach i puszkach są bezpieczne do obracania.
+        return self.container_type in ['bottle', 'can']
+        # Zwracam wartość logiczną wyrażenia, które sprawdza, czy typ opakowania jest w liście ['bottle', 'can'].
+
+    def __str__(self):
+        # Zdefiniuję specjalną metodę '__str__', która zwraca ładnie sformatowany tekst opisujący napój.
+        return f"Napój jest podawany w {self.container_type}, ma pojemność {self.capacity} ml"
+        # Tekst opisuje typ opakowania i pojemność napoju.
+
+    def __eq__(self, other):
+        # Zdefiniuję specjalną metodę '__eq__', która sprawdza, czy dwa napoje są identyczne (mają tę samą pojemność i typ opakowania).
+        return self.capacity == other.capacity and self.container_type == other.container_type
+        # Zwracam wartość logiczną wyrażenia, które sprawdza, czy pojemność i typ opakowania są takie same dla obu napojów.
+
+class BottledWater(Drink):
+    # Tworzę klasę 'BottledWater', która dziedziczy po klasie 'Drink'. Ta klasa reprezentuje wodę butelkowaną.
+    def __init__(self, capacity):
+        # Metoda inicjalizująca. Przyjmuje tylko pojemność jako argument, ponieważ typ opakowania dla wody butelkowanej jest zawsze 'bottle'.
+        super().__init__(capacity, 'bottle')
+        # Wywołuję metodę inicjalizującą klasy nadrzędnej ('Drink'), przekazując jej pojemność i stały typ opakowania 'bottle'.
+
+class SweetenedDrink(Drink):
+    # Tworzę klasę 'SweetenedDrink', która również dziedziczy po klasie 'Drink'. Ta klasa reprezentuje napoje słodzone.
+    def __init__(self, capacity, container_type, amount_of_sugar):
+        # Metoda inicjalizująca. Przyjmuje pojemność, typ opakowania i ilość cukru jako argumenty.
+        super().__init__(capacity, container_type)
+        # Wywołuję metodę inicjalizującą klasy nadrzędnej ('Drink'), przekazując jej pojemność i typ opakowania.
+        self.amount_of_sugar = amount_of_sugar
+        # Ustawiam ilość cukru w napoju.
+
+    def get_sugar_percentage(self):
+        # Tworzę metodę, która oblicza procentowy udział cukru w napoju.
+        return self.amount_of_sugar / self.capacity * 100
+        # Obliczam procentowy udział cukru i zwracam wynik.
+
+    def __str__(self):
+        # Zdefiniuję specjalną metodę '__str__', która zwraca ładnie sformatowany tekst opisujący napój, ale teraz dodaje informacje o zawartości cukru.
+        return super().__str__() + f" i zawiera {self.get_sugar_percentage()}% cukru."
+        # Tekst opisuje typ opakowania, pojemność napoju i procentowy udział cukru.
+
+drinks = [
+    BottledWater(500),
+    BottledWater(1000),
+    SweetenedDrink(500, 'can', 25),
+    SweetenedDrink(1000, 'bottle', 50)
+]
+# Tworzę listę różnych napojów. 
+
+for drink in drinks:
+    # Iteruję po liście napojów...
+    print(drink)
+    # ...i wyświetlam informacje o każdym napoju. Dzięki metodzie '__str__' każdy napój będzie ładnie sformatowany.
